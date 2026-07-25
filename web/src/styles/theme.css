@@ -1,0 +1,145 @@
+/*
+ * Konji design tokens, ported from konji-visual-direction-v2.html.
+ *
+ * Dark is the default and follows the system, with an explicit
+ * [data-theme] override on <html> that always wins so the in-app toggle works
+ * regardless of OS setting. Semantics hold across both themes: --ink is always
+ * the page background, --paper always the text on it.
+ */
+
+:root {
+  --ink: #121110;
+  --panel: #1d1b19;
+  --panel-2: #262320;
+  --line: #3a352f;
+  --paper: #f7f3ee;
+  --paper-dim: #b9b2a8;
+  --red: #ff4438;
+  --red-deep: #7a1e19;
+  --amber: #ffb020;
+  --amber-deep: #6b4a12;
+  --on-accent: #1a0503;
+  --outline: #000000;
+  --online: #6fcb6f;
+  --glow-a: #2a1210;
+  --glow-b: #241512;
+
+  --radius-sm: 7px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* Touch targets never go below this. */
+  --tap: 44px;
+  --shell: 480px;
+  --bar-height: 62px;
+
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --ink: #f2e6d8;
+  --panel: #ead9c3;
+  --panel-2: #e2cbae;
+  --line: #c9af8e;
+  --paper: #2a2018;
+  --paper-dim: #6e5c48;
+  --red: #8c2f39;
+  --red-deep: #e8c9cc;
+  --amber: #a9780f;
+  --amber-deep: #c9a24a;
+  --on-accent: #fdf6ef;
+  --outline: #2a2018;
+  --online: #3e7a3e;
+  --glow-a: #ecd3ce;
+  --glow-b: #efdcc4;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --ink: #f2e6d8;
+    --panel: #ead9c3;
+    --panel-2: #e2cbae;
+    --line: #c9af8e;
+    --paper: #2a2018;
+    --paper-dim: #6e5c48;
+    --red: #8c2f39;
+    --red-deep: #e8c9cc;
+    --amber: #a9780f;
+    --amber-deep: #c9a24a;
+    --on-accent: #fdf6ef;
+    --outline: #2a2018;
+    --online: #3e7a3e;
+    --glow-a: #ecd3ce;
+    --glow-b: #efdcc4;
+
+    color-scheme: light;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  /* 16px floor: anything smaller triggers iOS Safari's focus auto-zoom. */
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--paper);
+  background:
+    radial-gradient(ellipse 800px 460px at 10% -8%, var(--glow-a) 0%, transparent 60%),
+    radial-gradient(ellipse 700px 460px at 105% 15%, var(--glow-b) 0%, transparent 55%),
+    var(--ink);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  /* Guards against the classic mobile bug: one stray wide child scrolling the page. */
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font: inherit;
+  font-size: 16px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

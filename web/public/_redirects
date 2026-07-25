@@ -1,0 +1,7 @@
+# Netlify / Cloudflare Pages SPA fallback.
+#
+# Konji uses client-side routing, so the server has no file at /requests or
+# /chat/abc. Without this rule those URLs 404 on refresh or when shared — the
+# app only works if you always enter through "/". Serve index.html instead and
+# let the router resolve the path.
+/*  /index.html  200

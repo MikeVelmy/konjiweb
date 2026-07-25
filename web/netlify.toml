@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Duplicates public/_redirects so the fallback holds whichever mechanism
+# Netlify resolves first.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
