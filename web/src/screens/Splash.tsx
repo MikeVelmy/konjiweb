@@ -1,18 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-import { KonjiMark } from '../components/KonjiMark';
-
-/** The splash ground is fixed in both themes, the same reasoning the avatars
- *  use: a launch screen is a brand moment, not a themed surface. */
-const GROUND = '#2a2724';
-
 export function Splash() {
   const navigate = useNavigate();
 
   return (
     <div className="splash">
       <div className="splash__stage">
-        <KonjiMark size={104} ground={GROUND} animate decorative />
+        {/* Uppercased in CSS rather than in the markup, so the accessible name
+            stays "Konji" instead of being spelled out as an initialism. */}
         <h1 className="splash__word">Konji</h1>
       </div>
 

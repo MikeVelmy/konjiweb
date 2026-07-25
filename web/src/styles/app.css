@@ -86,8 +86,9 @@
 /* ---------------------------------------------------------------- button -- */
 
 /*
- * The arcade button: thick outline plus a hard offset shadow, which collapses
- * on press so the surface pushes into its own shadow.
+ * Glass button: a translucent tint over a hairline edge, sheen along the top,
+ * and a low soft cast. Press sinks it a pixel and deepens the tint rather than
+ * moving it — the surface stays where the eye left it.
  */
 .btn {
   position: relative;
@@ -97,20 +98,23 @@
   width: 100%;
   min-height: var(--tap);
   padding: 14px 16px;
-  border: 2.5px solid var(--outline);
+  border: 1px solid var(--glass-edge-hi);
   border-radius: var(--radius-md);
-  background: var(--red);
+  background: color-mix(in srgb, var(--red) 86%, transparent);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   color: var(--on-accent);
   font-size: 0.95rem;
   font-weight: 800;
-  box-shadow: 3px 3px 0 var(--outline);
-  transition: transform 0.06s ease, box-shadow 0.06s ease;
+  box-shadow: var(--glass-cast), inset 0 1px 0 var(--glass-sheen);
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .btn:active:not(:disabled) {
-  transform: translate(3px, 3px);
-  box-shadow: 0 0 0 var(--outline);
+  transform: translateY(1px);
+  background: color-mix(in srgb, var(--red) 96%, transparent);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
 }
 
 .btn:disabled {
@@ -119,14 +123,21 @@
 }
 
 .btn--ghost {
-  background: var(--panel-2);
-  border-color: var(--line);
-  color: var(--paper-dim);
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+  background: var(--glass-fill);
+  border-color: var(--glass-edge);
+  color: var(--paper);
+}
+
+.btn--ghost:active:not(:disabled) {
+  background: var(--glass-fill-hi);
 }
 
 .btn--amber {
-  background: var(--amber);
+  background: color-mix(in srgb, var(--amber) 86%, transparent);
+}
+
+.btn--amber:active:not(:disabled) {
+  background: color-mix(in srgb, var(--amber) 96%, transparent);
 }
 
 .btn-row {
@@ -180,18 +191,22 @@
   flex: 1;
   min-height: var(--tap);
   padding: 12px 6px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-sm);
-  background: var(--panel-2);
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   color: var(--paper-dim);
   font-size: 0.9rem;
   font-weight: 700;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .segmented button[aria-checked="true"] {
-  background: var(--red);
-  border-color: var(--outline);
+  background: color-mix(in srgb, var(--red) 82%, transparent);
+  border-color: var(--glass-edge-hi);
   color: var(--on-accent);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
 }
 
 .segmented button:disabled {
@@ -208,18 +223,23 @@
   min-height: var(--tap);
   padding: 13px 16px;
   margin-bottom: 8px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-md);
-  background: var(--panel-2);
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   color: var(--paper);
   font-size: 0.95rem;
   font-weight: 600;
   text-align: left;
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
+  transition: background 0.18s ease, border-color 0.18s ease;
 }
 
 .choice[aria-checked="true"],
 .choice[aria-expanded="true"] {
-  border-color: var(--red);
+  border-color: color-mix(in srgb, var(--red) 60%, transparent);
+  background: var(--glass-fill-hi);
 }
 
 .check {
@@ -228,17 +248,22 @@
   gap: 12px;
   width: 100%;
   padding: 16px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-md);
-  background: var(--panel);
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   color: var(--paper);
   font-size: 0.9rem;
   line-height: 1.45;
   text-align: left;
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
+  transition: background 0.18s ease, border-color 0.18s ease;
 }
 
 .check[aria-checked="true"] {
-  border-color: var(--red);
+  border-color: color-mix(in srgb, var(--red) 60%, transparent);
+  background: var(--glass-fill-hi);
 }
 
 .check__box {
@@ -247,16 +272,17 @@
   place-items: center;
   width: 24px;
   height: 24px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--glass-edge-hi);
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 900;
   color: var(--on-accent);
+  transition: background 0.18s ease;
 }
 
 .check[aria-checked="true"] .check__box {
-  background: var(--red);
-  border-color: var(--red);
+  background: color-mix(in srgb, var(--red) 90%, transparent);
+  border-color: var(--glass-edge-hi);
 }
 
 .country-list {
@@ -265,9 +291,12 @@
   margin: 8px 0 0;
   padding: 0;
   list-style: none;
-  border: 1px solid var(--line);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-md);
-  background: var(--panel);
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-cast), inset 0 1px 0 var(--glass-sheen);
 }
 
 .country-list button {
@@ -278,12 +307,17 @@
   min-height: var(--tap);
   padding: 13px 16px;
   border: 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--glass-edge);
   background: none;
   color: var(--paper);
   font-size: 0.95rem;
   font-weight: 600;
   text-align: left;
+  transition: background 0.18s ease;
+}
+
+.country-list button:not(:disabled):active {
+  background: var(--glass-fill-hi);
 }
 
 .country-list button:disabled {
@@ -304,9 +338,9 @@
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  border: 2px solid var(--outline);
+  border: 1px solid var(--glass-edge-hi);
   border-radius: var(--radius-lg);
-  background: var(--panel-2);
+  background: var(--glass-fill);
   overflow: hidden;
 }
 
@@ -344,7 +378,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  border: 2px solid var(--outline);
+  border: 1px solid var(--glass-edge-hi);
   border-radius: 7px;
 }
 
@@ -363,20 +397,24 @@
 .chip {
   min-height: var(--tap);
   padding: 10px 16px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-sm);
-  background: var(--panel-2);
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   color: var(--paper-dim);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .chip[aria-checked="true"] {
-  background: var(--red);
-  border-color: var(--outline);
+  background: color-mix(in srgb, var(--red) 82%, transparent);
+  border-color: var(--glass-edge-hi);
   color: var(--on-accent);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
 }
 
 /* ------------------------------------------------------------------ draw -- */
@@ -392,9 +430,12 @@
 .reel {
   position: relative;
   height: clamp(170px, 32vh, 210px);
-  border: 2.5px solid var(--outline);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-xl);
-  background: var(--panel-2);
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
   overflow: hidden;
 }
 
@@ -425,9 +466,9 @@
   flex: 0 0 auto;
   width: 56px;
   height: 56px;
-  border: 2px solid var(--outline);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-md);
-  background: var(--panel);
+  background: var(--glass-fill);
 }
 
 .reel__fade {
@@ -605,9 +646,11 @@
   flex: 0 0 auto;
   min-height: 36px;
   padding: 8px 12px;
-  border: 2px solid var(--amber-deep);
+  border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
   border-radius: var(--radius-sm);
-  background: none;
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   color: var(--amber);
   font-size: 0.68rem;
   font-weight: 800;
@@ -670,18 +713,22 @@
   flex: 0 0 auto;
   width: var(--tap);
   height: var(--tap);
-  border: 2px solid var(--line);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-md);
-  background: var(--panel-2);
+  background: var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   color: var(--paper-dim);
   font-size: 1.1rem;
   font-weight: 900;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .composer button:not(:disabled) {
-  background: var(--red);
-  border-color: var(--outline);
+  background: color-mix(in srgb, var(--red) 86%, transparent);
+  border-color: var(--glass-edge-hi);
   color: var(--on-accent);
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
 }
 
 /* ---------------------------------------------------------------- reveal -- */
@@ -845,36 +892,41 @@
 /*
  * Both buttons restate their surface. The shared .btn tokens follow the theme,
  * and a splash that is fixed dark grey cannot have its actions flip to the light
- * palette underneath it.
+ * palette underneath it — so the glass is pinned to the dark values here.
  */
 .splash__primary,
 .splash__secondary {
-  border-color: #000000;
-  box-shadow: 3px 3px 0 #000000;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .splash__primary {
-  background: #ff4438;
+  background: rgba(255, 68, 56, 0.86);
   color: #1a0503;
 }
 
-/* Optically centred: the mark sits above the midline so the actions at the
+.splash__primary:active:not(:disabled) {
+  background: rgba(255, 68, 56, 0.96);
+}
+
+/* Optically centred: the wordmark sits above the midline so the actions at the
    bottom do not make the composition feel bottom-heavy. */
 .splash__stage {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
+  display: grid;
+  place-items: center;
   padding-bottom: 6vh;
 }
 
+/* The wordmark is the whole identity now, so it carries the weight the mark
+   used to: set large, heavy, and tight. Caps need less negative tracking than
+   lowercase — at -0.045em the letterforms start to collide. */
 .splash__word {
   margin: 0;
-  font-size: clamp(2.75rem, 13vw, 3.5rem);
+  font-size: clamp(3.25rem, 17vw, 4.5rem);
   font-weight: 900;
-  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
   line-height: 1;
   color: var(--splash-paper);
 }
@@ -886,8 +938,12 @@
 }
 
 .splash__secondary {
-  background: #363230;
+  background: rgba(255, 255, 255, 0.055);
   color: var(--splash-paper);
+}
+
+.splash__secondary:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .splash__legal {
@@ -905,32 +961,3 @@
   text-underline-offset: 3px;
 }
 
-/* -------------------------------------------------------------- the wipe -- */
-
-/*
- * The signature: the censor bar slides shut across the eyes on load, so the
- * face is redacted in front of you rather than arriving pre-hidden.
- */
-.mark__bar {
-  transform-box: fill-box;
-  transform-origin: left center;
-}
-
-.mark__bar--wipe {
-  animation: mark-wipe 0.45s cubic-bezier(0.85, 0, 0.15, 1) 0.25s both;
-}
-
-@keyframes mark-wipe {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mark__bar--wipe {
-    animation: none;
-  }
-}
