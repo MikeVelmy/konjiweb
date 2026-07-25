@@ -60,8 +60,8 @@ export function OnboardingIdentity() {
             Why is an option greyed out
           </p>
           <p className="muted" style={{ marginTop: 8 }}>
-            Konji only offers same-gender matching where it is legally permitted to. In{' '}
-            {countryName} it is not, so pairing here is opposite-gender only.
+            Konji only offers same gender matching where it is legally permitted to. In{' '}
+            {countryName} it is not, so pairing here is opposite gender only.
           </p>
         </div>
       )}

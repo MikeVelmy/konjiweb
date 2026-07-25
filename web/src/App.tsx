@@ -5,6 +5,8 @@ import { useSession } from './data/RepositoryProvider';
 import { Chat } from './screens/Chat';
 import { Chats } from './screens/Chats';
 import { Draw } from './screens/Draw';
+import { Legal } from './screens/Legal';
+import { Login } from './screens/Login';
 import { Me } from './screens/Me';
 import { OnboardingAvatar } from './screens/OnboardingAvatar';
 import { OnboardingIdentity } from './screens/OnboardingIdentity';
@@ -12,9 +14,27 @@ import { OnboardingWelcome } from './screens/OnboardingWelcome';
 import { Report } from './screens/Report';
 import { Requests } from './screens/Requests';
 import { Reveal } from './screens/Reveal';
+import { Splash } from './screens/Splash';
 
 /** Routes that render without the tab bar — onboarding and full-screen flows. */
-const CHROMELESS = ['/welcome', '/identity', '/avatar', '/chat/', '/reveal/', '/report/'];
+const CHROMELESS = [
+  '/start',
+  '/login',
+  '/terms',
+  '/privacy',
+  '/welcome',
+  '/identity',
+  '/avatar',
+  '/chat/',
+  '/reveal/',
+  '/report/',
+];
+
+/** Reachable without a profile: the splash, the way in, and the way back in. */
+const SIGNED_OUT = ['/start', '/login', '/welcome', '/identity', '/avatar'];
+
+/** Reachable in either state — the splash links here before anyone has signed up. */
+const LEGAL = ['/terms', '/privacy'];
 
 export function App() {
   const { profile, loading } = useSession();
@@ -34,10 +54,11 @@ export function App() {
   // arrived on — deep links are shareable on the web in a way they are not in a
   // native build.
   const onboarded = Boolean(profile);
-  const onOnboarding = ['/welcome', '/identity', '/avatar'].includes(location.pathname);
+  const onSignedOut = SIGNED_OUT.includes(location.pathname);
+  const onLegal = LEGAL.includes(location.pathname);
 
-  if (!onboarded && !onOnboarding) return <Navigate to="/welcome" replace />;
-  if (onboarded && onOnboarding) return <Navigate to="/" replace />;
+  if (!onboarded && !onSignedOut && !onLegal) return <Navigate to="/start" replace />;
+  if (onboarded && onSignedOut) return <Navigate to="/" replace />;
 
   const showTabs =
     onboarded && !CHROMELESS.some((prefix) => location.pathname.startsWith(prefix));
@@ -45,6 +66,11 @@ export function App() {
   return (
     <div className="shell">
       <Routes>
+        <Route path="/start" element={<Splash />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/terms" element={<Legal kind="terms" />} />
+        <Route path="/privacy" element={<Legal kind="privacy" />} />
+
         <Route path="/welcome" element={<OnboardingWelcome />} />
         <Route path="/identity" element={<OnboardingIdentity />} />
         <Route path="/avatar" element={<OnboardingAvatar />} />

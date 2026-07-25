@@ -57,7 +57,7 @@ describe('country matching gate', () => {
     const repo = newRepo();
     await expect(
       repo.completeOnboarding({ ...onboarding, gender: 'male', genderPreference: 'male' }),
-    ).rejects.toThrow(/same-gender/i);
+    ).rejects.toThrow(/same gender/i);
   });
 
   it('allows same-gender matching where it is permitted', async () => {

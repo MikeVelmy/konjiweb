@@ -101,11 +101,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: var(--paper);
-  background:
-    radial-gradient(ellipse 800px 460px at 10% -8%, var(--glow-a) 0%, transparent 60%),
-    radial-gradient(ellipse 700px 460px at 105% 15%, var(--glow-b) 0%, transparent 55%),
-    var(--ink);
-  background-attachment: fixed;
+  background: var(--ink);
   -webkit-font-smoothing: antialiased;
   /* Guards against the classic mobile bug: one stray wide child scrolling the page. */
   overflow-x: hidden;

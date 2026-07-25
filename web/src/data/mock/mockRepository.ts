@@ -183,7 +183,7 @@ export class MockRepository implements Repository {
       input.gender === input.genderPreference &&
       !allowsSameGenderMatching(input.country)
     ) {
-      throw new Error('Same-gender matching is not available in this country');
+      throw new Error('Same gender matching is not available in this country');
     }
     const profile: Profile = {
       id: ME,

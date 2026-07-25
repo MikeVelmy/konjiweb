@@ -36,23 +36,44 @@ afterEach(async () => {
 });
 
 describe('app shell', () => {
-  it('lands a brand new visitor on onboarding', async () => {
+  it('lands a brand new visitor on the splash', async () => {
     renderAt('/');
-    expect(await screen.findByText(/no face/i)).toBeTruthy();
-    expect(screen.getByText(/18 or older/i)).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Konji' })).toBeTruthy();
+    expect(screen.getByText(/set me up/i)).toBeTruthy();
+    expect(screen.getByText(/not new to this/i)).toBeTruthy();
   });
 
-  it('redirects a deep link to onboarding when there is no profile', async () => {
+  it('points the splash legal links at the terms and privacy routes', async () => {
+    renderAt('/start');
+    const terms = await screen.findByRole('link', { name: 'Terms' });
+    expect(terms.getAttribute('href')).toBe('/terms');
+    expect(screen.getByRole('link', { name: 'Privacy Policy' }).getAttribute('href')).toBe(
+      '/privacy',
+    );
+  });
+
+  it('redirects a deep link to the splash when there is no profile', async () => {
     // Web routes are shareable in a way native screens are not, so an
     // un-onboarded visitor hitting /chats must not land on a broken screen.
     renderAt('/chats');
+    expect(await screen.findByRole('heading', { name: 'Konji' })).toBeTruthy();
+  });
+
+  it('lets a signed-out visitor read the legal pages', async () => {
+    renderAt('/privacy');
+    expect(await screen.findByText(/Privacy Policy/)).toBeTruthy();
+  });
+
+  it('still reaches onboarding from the splash CTA', async () => {
+    renderAt('/welcome');
     expect(await screen.findByText(/no face/i)).toBeTruthy();
+    expect(screen.getByText(/18 or older/i)).toBeTruthy();
   });
 
   it('shows the country gate explanation for Ghana', async () => {
     renderAt('/identity');
     expect(await screen.findByText(/set yourself up/i)).toBeTruthy();
-    expect(screen.getByText(/only offers same-gender matching/i)).toBeTruthy();
+    expect(screen.getByText(/only offers same gender matching/i)).toBeTruthy();
   });
 });
 

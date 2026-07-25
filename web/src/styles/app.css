@@ -817,3 +817,120 @@
   transform: translateX(-50%);
   box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.7);
 }
+
+/* ---------------------------------------------------------------- splash -- */
+
+/*
+ * The launch screen. Fixed dark grey in both themes and hard-coded rather than
+ * tokenised, for the same reason the avatars are: it is a brand moment that has
+ * to look identical to everyone, not a surface that follows the OS.
+ */
+
+.splash {
+  --splash-ground: #2a2724;
+  --splash-paper: #f7f3ee;
+  --splash-dim: #b9b2a8;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px clamp(16px, 5vw, 24px) calc(24px + env(safe-area-inset-bottom));
+  /* A landscape phone is short enough to overflow this; scroll rather than clip
+     the legal line off the bottom. */
+  overflow-y: auto;
+  background: var(--splash-ground);
+  color: var(--splash-paper);
+}
+
+/*
+ * Both buttons restate their surface. The shared .btn tokens follow the theme,
+ * and a splash that is fixed dark grey cannot have its actions flip to the light
+ * palette underneath it.
+ */
+.splash__primary,
+.splash__secondary {
+  border-color: #000000;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+.splash__primary {
+  background: #ff4438;
+  color: #1a0503;
+}
+
+/* Optically centred: the mark sits above the midline so the actions at the
+   bottom do not make the composition feel bottom-heavy. */
+.splash__stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding-bottom: 6vh;
+}
+
+.splash__word {
+  margin: 0;
+  font-size: clamp(2.75rem, 13vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: var(--splash-paper);
+}
+
+.splash__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.splash__secondary {
+  background: #363230;
+  color: var(--splash-paper);
+}
+
+.splash__legal {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--splash-dim);
+}
+
+.splash__legal a {
+  color: var(--splash-paper);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- the wipe -- */
+
+/*
+ * The signature: the censor bar slides shut across the eyes on load, so the
+ * face is redacted in front of you rather than arriving pre-hidden.
+ */
+.mark__bar {
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.mark__bar--wipe {
+  animation: mark-wipe 0.45s cubic-bezier(0.85, 0, 0.15, 1) 0.25s both;
+}
+
+@keyframes mark-wipe {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark__bar--wipe {
+    animation: none;
+  }
+}

@@ -103,8 +103,8 @@ export function Me() {
             title="Country"
             subtitle={
               country?.sameGenderMatching
-                ? 'Same-gender matching is available here.'
-                : `Konji offers opposite-gender pairing only in ${country?.name ?? 'your country'}.`
+                ? 'Same gender matching is available here.'
+                : `Konji offers opposite gender pairing only in ${country?.name ?? 'your country'}.`
             }
             right={<span style={{ fontSize: '1.4rem' }}>{country?.flag}</span>}
           />
@@ -193,7 +193,7 @@ export function Me() {
             title="Backend"
             subtitle={
               backend === 'mock'
-                ? 'Running on the in-memory mock. Set the Supabase environment variables to go live.'
+                ? 'Running on the in memory mock. Set the Supabase environment variables to go live.'
                 : 'Connected to Supabase.'
             }
             right={
