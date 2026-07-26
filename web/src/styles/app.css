@@ -804,47 +804,55 @@
   color: var(--red);
 }
 
+/* The box every tab glyph is fitted into, and what the badge is pinned to. */
 .tab-icon {
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  width: 21px;
-  height: 21px;
+  display: block;
+  width: var(--art-size, 22px);
+  height: var(--art-size, 22px);
 }
 
-.tab-icon i {
-  border-radius: 1px;
-  background: currentColor;
-}
-
-.tab-icon i[data-off="1"] {
-  background: transparent;
+.tab-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /*
- * Chats swaps the pixel grid for the bubble artwork. It is painted as a mask
- * rather than dropped in as an <img> so the glyph still takes currentColor —
- * it has to go dim, then red when the tab is current, and follow the light
- * theme, none of which a flat grey PNG can do. The mask sits on a pseudo so it
- * does not clip the badge, which is a real child of the icon.
+ * Three of the four tabs are artwork files. Each is painted as a mask rather
+ * than dropped in as an <img> so the glyph still takes currentColor — it has to
+ * go dim, then red when the tab is current, and follow the light theme, none of
+ * which a flat single-colour file can do. The mask sits on a pseudo so it does
+ * not clip the badge, which is a real child of the icon.
+ *
+ * Sizes are per-tab: each file carries a different amount of its own margin, so
+ * --art-size is tuned until the glyph inside lands at the same optical size as
+ * the others.
  */
-.tab-icon--drawn {
-  display: block;
-  /* Larger than the 21px grid because the artwork carries its own margin —
-     the bubble itself lands at about the same optical size. */
-  width: 25px;
-  height: 25px;
-}
-
-.tab-icon--drawn::before {
+.tab-icon--art::before {
   content: '';
   display: block;
   width: 100%;
   height: 100%;
   background: currentColor;
-  -webkit-mask: url('/images/chats.png') center / contain no-repeat;
-  mask: url('/images/chats.png') center / contain no-repeat;
+  -webkit-mask: var(--art) center / contain no-repeat;
+  mask: var(--art) center / contain no-repeat;
+}
+
+.tab-icon--chats {
+  --art: url('/images/chats.png');
+  --art-size: 25px;
+}
+
+.tab-icon--requests {
+  --art: url('/images/requests.png');
+}
+
+/* A hair smaller than the rest: it is the only solid glyph, and a filled disc
+   reads larger than an outline at the same box size. */
+.tab-icon--me {
+  --art: url('/images/me.png');
+  --art-size: 21px;
 }
 
 .tab-icon .badge {

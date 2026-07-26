@@ -3,25 +3,57 @@ import { NavLink } from 'react-router-dom';
 
 import { useRepository } from '../data/RepositoryProvider';
 
-const SHAPES = {
-  draw: [1, 0, 1, 0, 1, 0, 1, 0, 1],
-  requests: [1, 1, 1, 0, 1, 0, 0, 1, 0],
-  me: [0, 1, 0, 1, 1, 1, 1, 1, 1],
-} as const;
+/** Tabs whose icon is a mask of an artwork file. */
+const ART = ['chats', 'requests', 'me'] as const;
 
-/** Chats is drawn from artwork instead of the 3×3 grid the other tabs use. */
-type Shape = keyof typeof SHAPES | 'chats';
+type Shape = 'draw' | (typeof ART)[number];
+
+function isArt(shape: Shape): shape is (typeof ART)[number] {
+  return (ART as readonly string[]).includes(shape);
+}
+
+/*
+ * A die, for the lucky draw — the same five pips the old pixel grid spelled out,
+ * now on a face. It stays drawn in code rather than becoming a fourth artwork
+ * file: it is four shapes, it costs no request, and being a vector it holds its
+ * edges at any density. The rounded square and the 2px stroke are set to match
+ * the weight of the artwork glyphs beside it.
+ */
+function DrawIcon() {
+  return (
+    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+      <rect
+        x="3.4"
+        y="3.4"
+        width="17.2"
+        height="17.2"
+        rx="5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <g fill="currentColor">
+        <circle cx="8.6" cy="8.6" r="1.8" />
+        <circle cx="15.4" cy="8.6" r="1.8" />
+        <circle cx="12" cy="12" r="1.8" />
+        <circle cx="8.6" cy="15.4" r="1.8" />
+        <circle cx="15.4" cy="15.4" r="1.8" />
+      </g>
+    </svg>
+  );
+}
 
 function TabIcon({ shape, badge }: { shape: Shape; badge?: number }) {
-  const drawn = shape === 'chats';
+  const art = isArt(shape);
 
   return (
-    <span className={drawn ? 'tab-icon tab-icon--drawn' : 'tab-icon'} aria-hidden="true">
-      {drawn
-        ? null
-        : SHAPES[shape].map((on, i) => <i key={i} data-off={on ? '0' : '1'} />)}
+    <span
+      className={art ? `tab-icon tab-icon--art tab-icon--${shape}` : 'tab-icon'}
+      aria-hidden="true"
+    >
+      {art ? null : <DrawIcon />}
       {badge ? (
-        <span className={drawn ? 'badge badge--amber' : 'badge'}>
+        <span className={shape === 'chats' ? 'badge badge--amber' : 'badge'}>
           {badge > 9 ? '9+' : badge}
         </span>
       ) : null}
