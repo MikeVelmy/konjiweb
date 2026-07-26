@@ -39,8 +39,8 @@ describe('app shell', () => {
   it('lands a brand new visitor on the splash', async () => {
     renderAt('/');
     expect(await screen.findByRole('heading', { name: 'Konji' })).toBeTruthy();
-    expect(screen.getByText(/set me up/i)).toBeTruthy();
-    expect(screen.getByText(/not new to this/i)).toBeTruthy();
+    expect(screen.getByText(/sign up/i)).toBeTruthy();
+    expect(screen.getByText(/log in/i)).toBeTruthy();
   });
 
   it('points the splash legal links at the terms and privacy routes', async () => {
