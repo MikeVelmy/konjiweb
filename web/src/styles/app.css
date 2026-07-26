@@ -885,8 +885,11 @@
   isolation: isolate;
   padding: 20px clamp(16px, 5vw, 24px) calc(24px + env(safe-area-inset-bottom));
   /* A landscape phone is short enough to overflow this; scroll rather than clip
-     the legal line off the bottom. */
+     the legal line off the bottom. Sideways is a different matter — the bloom
+     behind the wordmark is deliberately wider than the shell and must not be
+     able to scroll the screen. */
   overflow-y: auto;
+  overflow-x: hidden;
   /* The ground shows through wherever the artwork does not reach — on a wide
      viewport `cover` still fills, but it is the fallback if the file is missing. */
   background: var(--splash-ground) url('/images/kisses.jpeg') center / cover no-repeat;
@@ -933,13 +936,118 @@
   background: rgba(255, 68, 56, 0.96);
 }
 
-/* Optically centred: the wordmark sits above the midline so the actions at the
+/* Optically centred: the lockup sits above the midline so the actions at the
    bottom do not make the composition feel bottom-heavy. */
 .splash__stage {
+  position: relative;
   flex: 1;
-  display: grid;
-  place-items: center;
-  padding-bottom: 6vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding-bottom: 4vh;
+}
+
+/* A soft magenta bloom behind the lockup, picked out of the artwork. It gives
+   the centre of the screen a light source, which is what the flat scrim was
+   missing. */
+.splash__stage::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(112vw, 560px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 32, 120, 0.34) 0%,
+    rgba(255, 32, 120, 0.12) 42%,
+    rgba(255, 32, 120, 0) 70%
+  );
+  animation: splash-bloom 9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes splash-bloom {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+}
+
+.splash__kicker,
+.splash__word,
+.splash__tagline {
+  position: relative;
+  /* Rises into place on load. The stage is the first thing anyone sees, so the
+     entrance is the one piece of motion that earns its keep. */
+  animation: splash-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.splash__word {
+  animation-delay: 0.06s;
+}
+
+.splash__tagline {
+  animation-delay: 0.13s;
+}
+
+@keyframes splash-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Where the app is, said once, quietly — it is the first question anyone has
+   and it stops the country picker three screens in from being a surprise. */
+.splash__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--splash-paper);
+}
+
+.splash__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--online);
+  box-shadow: 0 0 0 0 rgba(111, 203, 111, 0.6);
+  animation: splash-pulse 2.4s ease-out infinite;
+}
+
+@keyframes splash-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(111, 203, 111, 0.55);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px rgba(111, 203, 111, 0);
+  }
 }
 
 /* The wordmark is the whole identity now, so it carries the weight the mark
@@ -947,7 +1055,7 @@
    lowercase — at -0.045em the letterforms start to collide. */
 .splash__word {
   margin: 0;
-  font-size: clamp(3.25rem, 17vw, 4.5rem);
+  font-size: clamp(3.75rem, 21vw, 5.5rem);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.015em;
@@ -955,7 +1063,81 @@
   color: var(--splash-paper);
   /* Reads over the busiest part of the artwork; the scrim alone is not enough
      where a bright kiss lands directly under a counter. */
-  text-shadow: 0 2px 24px rgba(8, 3, 6, 0.75);
+  text-shadow: 0 2px 24px rgba(8, 3, 6, 0.75), 0 0 60px rgba(255, 32, 120, 0.35);
+}
+
+.splash__tagline {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.15rem, 5vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--splash-paper);
+  text-shadow: 0 1px 12px rgba(8, 3, 6, 0.8);
+}
+
+/* The same red the primary action uses, so the promise and the way to take it
+   up are visibly the same thing. */
+.splash__tagline-em {
+  color: #ff6b5e;
+}
+
+/*
+ * The rules of the place, running as a strip. It fills the band between the
+ * lockup and the actions — which was dead space — and the movement is what tells
+ * you the screen is alive before you have touched anything.
+ */
+.splash__marquee {
+  position: relative;
+  overflow: hidden;
+  margin: 0 calc(-1 * clamp(16px, 5vw, 24px)) 18px;
+  padding: 11px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  /* Faded ends, so the phrases arrive and leave instead of being clipped. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.splash__track {
+  display: flex;
+  width: max-content;
+  animation: splash-marquee 24s linear infinite;
+}
+
+/* Two identical tickers, each exactly half the track, so translating by half
+   the width lands on a pixel-identical frame and the loop is seamless. */
+.splash__ticker {
+  display: flex;
+  flex-shrink: 0;
+}
+
+@keyframes splash-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.splash__tick {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 14px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--splash-dim);
+}
+
+.splash__kiss {
+  font-size: 0.85rem;
+  letter-spacing: normal;
 }
 
 .splash__actions {
