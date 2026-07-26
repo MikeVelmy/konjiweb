@@ -868,25 +868,49 @@
 /* ---------------------------------------------------------------- splash -- */
 
 /*
- * The launch screen. Fixed dark grey in both themes and hard-coded rather than
+ * The launch screen. Fixed dark in both themes and hard-coded rather than
  * tokenised, for the same reason the avatars are: it is a brand moment that has
  * to look identical to everyone, not a surface that follows the OS.
  */
 
 .splash {
-  --splash-ground: #2a2724;
+  --splash-ground: #0b0508;
   --splash-paper: #f7f3ee;
-  --splash-dim: #b9b2a8;
+  --splash-dim: #c3b0b8;
 
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
+  isolation: isolate;
   padding: 20px clamp(16px, 5vw, 24px) calc(24px + env(safe-area-inset-bottom));
   /* A landscape phone is short enough to overflow this; scroll rather than clip
      the legal line off the bottom. */
   overflow-y: auto;
-  background: var(--splash-ground);
+  /* The ground shows through wherever the artwork does not reach — on a wide
+     viewport `cover` still fills, but it is the fallback if the file is missing. */
+  background: var(--splash-ground) url('/images/kisses.jpeg') center / cover no-repeat;
   color: var(--splash-paper);
+}
+
+/*
+ * A scrim, not a tint: the kisses stay legible at the top where nothing sits on
+ * them, and deepen towards the actions so the buttons and the legal line keep
+ * contrast against whichever part of the pattern lands behind them. Fixed to the
+ * viewport so a short landscape phone scrolling the content does not scroll a
+ * band of unscrimmed artwork into view.
+ */
+.splash::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 3, 6, 0.4) 0%,
+    rgba(8, 3, 6, 0.62) 48%,
+    rgba(8, 3, 6, 0.9) 100%
+  );
 }
 
 /*
@@ -929,6 +953,9 @@
   letter-spacing: -0.015em;
   line-height: 1;
   color: var(--splash-paper);
+  /* Reads over the busiest part of the artwork; the scrim alone is not enough
+     where a bright kiss lands directly under a counter. */
+  text-shadow: 0 2px 24px rgba(8, 3, 6, 0.75);
 }
 
 .splash__actions {
@@ -961,70 +988,4 @@
   text-underline-offset: 3px;
 }
 
-/* ----------------------------------------------------------------- login -- */
-
-/*
- * The way back in. Like the splash it is a brand moment, so the palette is
- * pinned dark in both themes rather than tokenised — the kisses artwork is
- * black-and-magenta and only reads against dark chrome.
- */
-
-.login {
-  --login-paper: #fdf4f7;
-  --login-dim: #d7b6c4;
-
-  position: relative;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  isolation: isolate;
-  background: #0b0508 url('/images/kisses.jpeg') center / cover no-repeat;
-  color: var(--login-paper);
-}
-
-/*
- * A scrim, not a tint: the kisses stay visible at the top where nothing sits on
- * them, and deepen towards the bottom so the copy and the action keep contrast
- * against whichever part of the pattern happens to land behind them.
- */
-.login::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    180deg,
-    rgba(8, 3, 6, 0.45) 0%,
-    rgba(8, 3, 6, 0.62) 45%,
-    rgba(8, 3, 6, 0.88) 100%
-  );
-}
-
-/* The login is chromeless, so the tab-bar allowance the shared screen reserves
-   would leave a dead band above the button. */
-.login .screen {
-  padding-bottom: calc(24px + env(safe-area-inset-bottom));
-}
-
-.login .title {
-  color: var(--login-paper);
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
-}
-
-.login .sub {
-  color: var(--login-dim);
-}
-
-.login .icon-btn {
-  border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--login-paper);
-}
-
-/* Same reasoning as the splash: the glass cannot flip to the light palette on a
-   surface that is fixed dark. */
-.login .btn {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
 
