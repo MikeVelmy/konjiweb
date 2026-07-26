@@ -11,21 +11,23 @@ export function Login() {
   const navigate = useNavigate();
 
   return (
-    <Screen>
-      <button type="button" className="icon-btn" aria-label="Back" onClick={() => navigate(-1)}>
-        ‹
-      </button>
+    <div className="login">
+      <Screen>
+        <button type="button" className="icon-btn" aria-label="Back" onClick={() => navigate(-1)}>
+          ‹
+        </button>
 
-      <h1 className="title" style={{ marginTop: 12 }}>
-        Welcome back
-      </h1>
-      <p className="sub">
-        Signing back in is not wired up yet. For now, set yourself up again and you are in.
-      </p>
+        <h1 className="title" style={{ marginTop: 12 }}>
+          Welcome back
+        </h1>
+        <p className="sub">
+          Signing back in is not wired up yet. For now, set yourself up again and you are in.
+        </p>
 
-      <div className="spacer" />
+        <div className="spacer" />
 
-      <Button onClick={() => navigate('/welcome')}>Set me up instead</Button>
-    </Screen>
+        <Button onClick={() => navigate('/welcome')}>Set me up instead</Button>
+      </Screen>
+    </div>
   );
 }
