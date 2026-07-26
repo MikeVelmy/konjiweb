@@ -22,11 +22,6 @@ export function Splash() {
   return (
     <div className="splash">
       <div className="splash__stage">
-        <p className="splash__kicker">
-          <span className="splash__dot" aria-hidden="true" />
-          Live in Ghana
-        </p>
-
         {/* Uppercased in CSS rather than in the markup, so the accessible name
             stays "Konji" instead of being spelled out as an initialism. */}
         <h1 className="splash__word">Konji</h1>
