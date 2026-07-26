@@ -6,18 +6,22 @@ import { useRepository } from '../data/RepositoryProvider';
 const SHAPES = {
   draw: [1, 0, 1, 0, 1, 0, 1, 0, 1],
   requests: [1, 1, 1, 0, 1, 0, 0, 1, 0],
-  chats: [1, 1, 1, 1, 1, 1, 1, 0, 0],
   me: [0, 1, 0, 1, 1, 1, 1, 1, 1],
 } as const;
 
-function TabIcon({ shape, badge }: { shape: keyof typeof SHAPES; badge?: number }) {
+/** Chats is drawn from artwork instead of the 3×3 grid the other tabs use. */
+type Shape = keyof typeof SHAPES | 'chats';
+
+function TabIcon({ shape, badge }: { shape: Shape; badge?: number }) {
+  const drawn = shape === 'chats';
+
   return (
-    <span className="tab-icon" aria-hidden="true">
-      {SHAPES[shape].map((on, i) => (
-        <i key={i} data-off={on ? '0' : '1'} />
-      ))}
+    <span className={drawn ? 'tab-icon tab-icon--drawn' : 'tab-icon'} aria-hidden="true">
+      {drawn
+        ? null
+        : SHAPES[shape].map((on, i) => <i key={i} data-off={on ? '0' : '1'} />)}
       {badge ? (
-        <span className={shape === 'chats' ? 'badge badge--amber' : 'badge'}>
+        <span className={drawn ? 'badge badge--amber' : 'badge'}>
           {badge > 9 ? '9+' : badge}
         </span>
       ) : null}

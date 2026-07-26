@@ -822,6 +822,31 @@
   background: transparent;
 }
 
+/*
+ * Chats swaps the pixel grid for the bubble artwork. It is painted as a mask
+ * rather than dropped in as an <img> so the glyph still takes currentColor —
+ * it has to go dim, then red when the tab is current, and follow the light
+ * theme, none of which a flat grey PNG can do. The mask sits on a pseudo so it
+ * does not clip the badge, which is a real child of the icon.
+ */
+.tab-icon--drawn {
+  display: block;
+  /* Larger than the 21px grid because the artwork carries its own margin —
+     the bubble itself lands at about the same optical size. */
+  width: 25px;
+  height: 25px;
+}
+
+.tab-icon--drawn::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  -webkit-mask: url('/images/chats.png') center / contain no-repeat;
+  mask: url('/images/chats.png') center / contain no-repeat;
+}
+
 .tab-icon .badge {
   position: absolute;
   top: -6px;
